@@ -1269,7 +1269,7 @@ local script = G2L["2"];
 		for i,v in pairs(TrakalaScriptFunctions.Trakala) do
 			if v then
 				if typeof(v) == "function" then
-					v()
+					task.spawn(v)
 				end
 			end
 		end
