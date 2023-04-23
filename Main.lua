@@ -281,142 +281,130 @@ local set = {
 set["Lost Rooms"] = function()
 	task.spawn(
 		function()
-			if game.ReplicatedStorage:FindFirstChild("GameInfo") then
-			else
-				return
-			end
+			--[=[
+ d888b  db    db d888888b      .d888b.      db      db    db  .d8b.  
+88' Y8b 88    88   `88'        VP  `8D      88      88    88 d8' `8b 
+88      88    88    88            odD'      88      88    88 88ooo88 
+88  ooo 88    88    88          .88'        88      88    88 88~~~88 
+88. ~8~ 88b  d88   .88.        j88.         88booo. 88b  d88 88   88 
+ Y888P  ~Y8888P' Y888888P      888888D      Y88888P ~Y8888P' YP   YP  CONVERTER
+]=]
 
-			local Players = game:GetService("Players")
-			local RunService = game:GetService("RunService")
-			local UserInputService = game:GetService("UserInputService")
-			local TweenService = game:GetService("TweenService")
-			local ReplicatedStorage = game:GetService("ReplicatedStorage")
+			-- Instances: 3 | Scripts: 1 | Modules: 0
+			local G2L = {};
 
-			local Player = Players.LocalPlayer
-			local Mouse = Player:GetMouse()
+			-- StarterPlayer.StarterCharacterScripts.LostRoom
+			G2L["1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"));
+			G2L["1"]["Name"] = [[LostRoom]];
+			G2L["1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling;
 
-			local GameInfo = ReplicatedStorage:FindFirstChild("GameInfo")
+			-- StarterPlayer.StarterCharacterScripts.LostRoom.Time
+			G2L["2"] = Instance.new("TextLabel", G2L["1"]);
+			G2L["2"]["TextWrapped"] = true;
+			G2L["2"]["TextScaled"] = true;
+			G2L["2"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+			G2L["2"]["FontFace"] = Font.new([[rbxasset://fonts/families/Inconsolata.json]], Enum.FontWeight.ExtraLight, Enum.FontStyle.Normal);
+			G2L["2"]["TextSize"] = 14;
+			G2L["2"]["TextColor3"] = Color3.fromRGB(0, 0, 0);
+			G2L["2"]["AnchorPoint"] = Vector2.new(0.5, 0.5);
+			G2L["2"]["Size"] = UDim2.new(0.17406439781188965, 0, 0.04966887831687927, 0);
+			G2L["2"]["Name"] = [[Time]];
+			G2L["2"]["BackgroundTransparency"] = 0.30000001192092896;
+			G2L["2"]["Position"] = UDim2.new(0.5, 0, 0.08344370871782303, 0);
 
-			local Time = GameInfo:FindFirstChild("Time")
+			-- StarterPlayer.StarterCharacterScripts.LostRoom.Lost Rooms
+			G2L["3"] = Instance.new("LocalScript", G2L["1"]);
+			G2L["3"]["Name"] = [[Lost Rooms]];
 
-			local TimeLabel = script.Parent.Time
-
-			function Highlight (char)
-				local Character = char
-				local Humanoid:Humanoid
-				for i,v in pairs(Character:GetChildren()) do
-					if v:IsA("Humanoid") then
-						Humanoid = v
-					end
-				end
-				local RootPart = Humanoid.RootPart
-
-				local Highlight = Instance.new("Highlight", char)
-				Highlight.Adornee = char
-				Highlight.Name = "Hightlight"
-				Highlight.FillColor = Color3.fromRGB(200, 71, 71)
-			end
-
-			local MonsterNameList = {
-				["Turned"] = function()
-					if workspace:FindFirstChild("Turned") then
-						return workspace:FindFirstChild("Turned")
-					end
-				end,
-				["Turned2"] = function()
-					if workspace:FindFirstChild("Turned2") then
-						return workspace:FindFirstChild("Turned2")
-					end
-				end,
-			}
-
-			local Update = {
-				["NotCD"] = true,
-				["CDDur"] = 1,
-				["A"] = function()
-					for i,v in pairs(MonsterNameList) do
-						local monster = v()
-						if monster then
-							Highlight(monster)
-						end
-					end
-				end
-			}
-
-			function Heartbeat ()
-				do -- Time
-					local T = math.floor(Time.Value)
-					local FinalTime = T.." AM"
-					if Time.Value > 13 then
-						FinalTime = tostring(T - 12).." PM"
-					end
-					TimeLabel.Text = FinalTime
-				end
-				if Update.NotCD then
-					Update.NotCD = false
-					Update.A()
-					task.delay(Update.CDDur, function()
-						Update.NotCD = true
-					end)
-				end
-			end
-
-			RunService.Heartbeat:Connect(Heartbeat)
-		end
-	)
-end
-	
-set.Trakala["Serverhop"] = function()
-	task.spawn(
-		function()
-			function serverhop ()
-				httprequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
-				local servers = {}
-				local req = httprequest({Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100", game.PlaceId)})
-				local body = game:GetService("HttpService"):JSONDecode(req.Body)
-				if body and body.data then
-					for i, v in next, body.data do
-						if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= game.JobId then
-							table.insert(servers, 1, v.id)
-						end
-					end
-				end
-				if #servers > 0 then
-					game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, servers[math.random(1, #servers)], game.Players.LocalPlayer)
-					game:GetService("StarterGui"):SetCore("SendNotification", {
-						Title = "System",
-						Text = "Serverhopping.",
-						Duration = 3
-					})
+			-- StarterPlayer.StarterCharacterScripts.LostRoom.Lost Rooms
+			local function C_3()
+				local script = G2L["3"];
+				if game.ReplicatedStorage:FindFirstChild("GameInfo") then
 				else
-					return game:GetService("StarterGui"):SetCore("SendNotification", {
-						Title = "System",
-						Text = "Serverhop was not successful.",
-						Duration = 3
-					})
-				end	
-			end
+					return
+				end
 
-			local set = 0
-			local teleporting = true
+				local Players = game:GetService("Players")
+				local RunService = game:GetService("RunService")
+				local UserInputService = game:GetService("UserInputService")
+				local TweenService = game:GetService("TweenService")
+				local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-			game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
-				if not gameProcessedEvent then
-					if input.KeyCode == Enum.KeyCode.L then
-						if set >= 3 then
-							if teleporting then
-								teleporting = false
-								serverhop()
-							end
-						else
-							set += 1
-							task.delay(0.5,function()
-								set -= 1
-							end)
+				local Player = Players.LocalPlayer
+				local Mouse = Player:GetMouse()
+
+				local GameInfo = ReplicatedStorage:FindFirstChild("GameInfo")
+
+				local Time = GameInfo:FindFirstChild("Time")
+
+				local TimeLabel = script.Parent.Time
+
+				function Highlight (char)
+					local Character = char
+					local Humanoid:Humanoid
+					for i,v in pairs(Character:GetChildren()) do
+						if v:IsA("Humanoid") then
+							Humanoid = v
 						end
 					end
+					local RootPart = Humanoid.RootPart
+
+					local Highlight = Instance.new("Highlight", char)
+					Highlight.Adornee = char
+					Highlight.Name = "Hightlight"
+					Highlight.FillColor = Color3.fromRGB(200, 71, 71)
 				end
-			end)
+
+				local MonsterNameList = {
+					["Turned"] = function()
+						if workspace:FindFirstChild("Turned") then
+							return workspace:FindFirstChild("Turned")
+						end
+					end,
+					["Turned2"] = function()
+						if workspace:FindFirstChild("Turned2") then
+							return workspace:FindFirstChild("Turned2")
+						end
+					end,
+				}
+
+				local Update = {
+					["NotCD"] = true,
+					["CDDur"] = 1,
+					["A"] = function()
+						for i,v in pairs(MonsterNameList) do
+							local monster = v()
+							if monster then
+								Highlight(monster)
+							end
+						end
+					end
+				}
+
+				function Heartbeat ()
+					do -- Time
+						local T = math.floor(Time.Value)
+						local FinalTime = T.." AM"
+						if Time.Value > 13 then
+							FinalTime = tostring(T - 12).." PM"
+						end
+						TimeLabel.Text = FinalTime
+					end
+					if Update.NotCD then
+						Update.NotCD = false
+						Update.A()
+						task.delay(Update.CDDur, function()
+							Update.NotCD = true
+						end)
+					end
+				end
+
+				RunService.Heartbeat:Connect(Heartbeat)
+
+			end;
+			task.spawn(C_3);
+
+			return G2L["1"], require;
 		end
 	)
 end
