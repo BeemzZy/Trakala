@@ -281,15 +281,25 @@ local set = {
 set["Lost Rooms"] = function()
 	task.spawn(
 		function()
+			if game.ReplicatedStorage:FindFirstChild("GameInfo") then
+			else
+				return
+			end
+
 			local Players = game:GetService("Players")
 			local RunService = game:GetService("RunService")
 			local UserInputService = game:GetService("UserInputService")
 			local TweenService = game:GetService("TweenService")
+			local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 			local Player = Players.LocalPlayer
 			local Mouse = Player:GetMouse()
 
-			local wrs = workspace
+			local GameInfo = ReplicatedStorage:FindFirstChild("GameInfo")
+
+			local Time = GameInfo:FindFirstChild("Time")
+
+			local TimeLabel = script.Parent.Time
 
 			function Highlight (char)
 				local Character = char
@@ -333,7 +343,15 @@ set["Lost Rooms"] = function()
 				end
 			}
 
-			function RenderStepped ()
+			function Heartbeat ()
+				do -- Time
+					local T = math.floor(Time.Value)
+					local FinalTime = T.." AM"
+					if Time.Value > 13 then
+						FinalTime = tostring(T - 12).." PM"
+					end
+					TimeLabel.Text = FinalTime
+				end
 				if Update.NotCD then
 					Update.NotCD = false
 					Update.A()
@@ -343,7 +361,7 @@ set["Lost Rooms"] = function()
 				end
 			end
 
-			RunService.RenderStepped:Connect(RenderStepped)
+			RunService.Heartbeat:Connect(Heartbeat)
 		end
 	)
 end
