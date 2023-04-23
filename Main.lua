@@ -263,6 +263,10 @@ set[1650291138] = function ()
 	})
 end
 
+set[3520390617] = function()
+	RQs.LongScripts["Lost Rooms"]()
+end
+
 return set
 
 end;
@@ -274,6 +278,76 @@ local set = {
 	Trakala = {}
 }
 
+set["Lost Rooms"] = function()
+	task.spawn(
+		function()
+			local Players = game:GetService("Players")
+			local RunService = game:GetService("RunService")
+			local UserInputService = game:GetService("UserInputService")
+			local TweenService = game:GetService("TweenService")
+
+			local Player = Players.LocalPlayer
+			local Mouse = Player:GetMouse()
+
+			local wrs = workspace
+
+			function Highlight (char)
+				local Character = char
+				local Humanoid:Humanoid
+				for i,v in pairs(Character:GetChildren()) do
+					if v:IsA("Humanoid") then
+						Humanoid = v
+					end
+				end
+				local RootPart = Humanoid.RootPart
+
+				local Highlight = Instance.new("Highlight", char)
+				Highlight.Adornee = char
+				Highlight.Name = "Hightlight"
+				Highlight.FillColor = Color3.fromRGB(200, 71, 71)
+			end
+
+			local MonsterNameList = {
+				["Turned"] = function()
+					if workspace:FindFirstChild("Turned") then
+						return workspace:FindFirstChild("Turned")
+					end
+				end,
+				["Turned2"] = function()
+					if workspace:FindFirstChild("Turned2") then
+						return workspace:FindFirstChild("Turned2")
+					end
+				end,
+			}
+
+			local Update = {
+				["NotCD"] = true,
+				["CDDur"] = 1,
+				["A"] = function()
+					for i,v in pairs(MonsterNameList) do
+						local monster = v()
+						if monster then
+							Highlight(monster)
+						end
+					end
+				end
+			}
+
+			function RenderStepped ()
+				if Update.NotCD then
+					Update.NotCD = false
+					Update.A()
+					task.delay(Update.CDDur, function()
+						Update.NotCD = true
+					end)
+				end
+			end
+
+			RunService.RenderStepped:Connect(RenderStepped)
+		end
+	)
+end
+	
 set.Trakala["Serverhop"] = function()
 	task.spawn(
 		function()
