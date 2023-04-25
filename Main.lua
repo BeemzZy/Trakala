@@ -725,6 +725,7 @@ end;
 -- StarterGui.Trakala.Main
 local function C_2()
 local script = G2L["2"];
+	-- Services
 	local g = game
 	local wrs = workspace
 	local Players = g:GetService("Players")
@@ -746,12 +747,16 @@ local script = G2L["2"];
 	local MarketplaceService = g:GetService("MarketplaceService")
 	local HttpService = g:GetService("HttpService")
 	
+	-- Things
 	local Player = Players.LocalPlayer
 	local Mouse = Player:GetMouse()
 	
 	local PlaceId = game.PlaceId
 	local GameId = game.GameId
 	local JobId = game.JobId
+	
+	local inf = 1/0
+	local ninf = -1/0
 	
 	local ScreenGui = script.Parent
 	local Background = ScreenGui.Background
@@ -791,22 +796,22 @@ local script = G2L["2"];
 		["Transparency"] = 1
 	}
 	
-	local LifeQuotes = {
-		[[“If you change the way you LOOK at things, the things you LOOK at change.” - Wayne Dyer]],
-		[[“The way I see it, if you want the rainbow, you gotta put up with the rain.” - Dolly Partron]],
-		[[“You will face many defeat in life, but never let yourself be defeated.” - Maya Angelou]],
-		[[“If you want to lift yourself up, life up someone else.” - Booker T. WashingTon]],
-		[[“Don't say you can't until you prove you can't.” - Les Paul]],
-		[[“Act as if what you do makes a difference. It does.” - William James]],
-		[[“Sometimes, their behavior is your answer.” - ?]],
-		[[“When you get tired, learn to rest, not quit.” - Banksy]],
-		[[“Be yourself, everyone is already taken.” - Oscar Wilde]],
-		[[“Dont wish for it, work for it.” - ?]],
-		[[“Yesterday is history, tomorrow is a mystery, and today is a gift... that's why they call it the present.”- Oogway]],
-		[[“I have no special talent, I am only passionately curious.” - Albert Einstein]],
-		[[“The way to get started is to quit talking and begin doing.” - Walt Disney]],
-		[[“You are enough just you are.” - Meghan Markle]]
-	}
+	local LifeQuotes
+	if http_request then
+		local request_payload = {
+			Url = "https://type.fit/api/quotes",
+		}
+		local result = http_request(request_payload)
+		local json = result["Body"]
+		json = string.gsub(json,'“','"')
+		json = string.gsub(json,'”','"')
+		local decoded = HttpService:JSONDecode(json)
+		LifeQuotes = decoded
+	else
+		LifeQuotes = {
+			[[“In the depth of winter, I finally learned that within me there lay an invincible summer.” - Albert Camus]]
+		}
+	end
 	
 	-- Operation Functions
 	print("Operation Functions")
@@ -976,13 +981,16 @@ local script = G2L["2"];
 	end
 	
 	function TextAddAnimated (Text:TextLabel, Message)
-		for i = 1, #Message do wait()
+		for i = 1, #Message do RunService.RenderStepped:Wait()
 			local tt = string.sub(Message, 1, i)
 			local newWord = tt:sub(i, i):gsub(" ", "")
 			Text.Text = tt
 			PlaySound(6895079853, 2, 1)
 			if newWord == "." then
-				wait(1)
+				if Message:sub(i+1,i+1) == [["]] or Message:sub(i+1,i+1) == [[”]] then
+				else
+					wait(1)
+				end
 			elseif newWord == "," then
 				wait(0.5)
 			end
@@ -991,7 +999,7 @@ local script = G2L["2"];
 	
 	function TextRemoveAnimated (Text:TextLabel)
 		local TextLength = #Text.Text
-		for i = 1, #Text.Text do wait()
+		for i = 1, #Text.Text do RunService.RenderStepped:Wait()
 			local tt = string.sub(Text.Text, 1, TextLength - i)
 			Text.Text = tt
 			PlaySound(6895079853, 2, 1.5)
@@ -1048,7 +1056,17 @@ local script = G2L["2"];
 	
 			wait(TweenInfoIn.Time*2)
 			
-			TextAddAnimated(Description, GetQuotes())
+			local quote = GetQuotes()
+			if quote["text"] then
+				local textQuotes = "“"..quote["text"]
+				
+				if quote["author"] then
+					textQuotes = textQuotes.."” - "..quote["author"]
+				else
+					textQuotes = textQuotes.."” - ".."Unknow"
+				end
+				TextAddAnimated(Description, textQuotes)
+			end
 			
 			wait(TweenInfoIn.Time*2)
 			
@@ -1363,14 +1381,14 @@ local script = G2L["2"];
 			break
 		end
 	end
+	local TWEEEN = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+	TweenService:Create(BlurEffect, TWEEEN, {
+		Size = 0
+	}):Play()
+	TweenService:Create(MusicAudio, TWEEEN, {
+		PlaybackSpeed = 0
+	}):Play()
 	if Supported then
-		local TWEEEN = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
-		TweenService:Create(BlurEffect, TWEEEN, {
-			Size = 0
-		}):Play()
-		TweenService:Create(MusicAudio, TWEEEN, {
-			PlaybackSpeed = 0
-		}):Play()
 	else
 		local DidRequest = Instance.new("BindableFunction")
 		_G.NotifyTrakala({
