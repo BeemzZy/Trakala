@@ -728,6 +728,17 @@ end;
 -- StarterGui.Trakala.Main
 local function C_2()
 local script = G2L["2"];
+	-- Parental
+	do -- Parent
+		local script = script
+		if game:GetService("RunService"):IsStudio() then
+		else
+			if getgenv then
+				script.Parent.Parent = game.CoreGui
+			end
+		end
+	end
+	
 	-- Services
 	local g = game
 	local wrs = workspace
@@ -750,7 +761,7 @@ local script = G2L["2"];
 	local MarketplaceService = g:GetService("MarketplaceService")
 	local HttpService = g:GetService("HttpService")
 	
-	-- Things
+	-- Player
 	local Player = Players.LocalPlayer
 	local Mouse = Player:GetMouse()
 	
@@ -770,19 +781,16 @@ local script = G2L["2"];
 	local MainFrame = Background.MainFrame
 	
 	-- Booleans
-	print("Booleans")
 	
 	local MainFrameToggle = Instance.new("BoolValue")
 	
 	-- Lightings
-	print("Lightings")
 	
 	local BlurEffect = Instance.new("BlurEffect", Lighting)
 	BlurEffect.Size = 0
 	BlurEffect.Enabled = true
 	
 	-- Operations
-	print("Operations")
 	
 	local FrameAnimations = {
 		["Startup"] = {}
@@ -818,7 +826,6 @@ local script = G2L["2"];
 	end
 	
 	-- Operation Functions
-	print("Operation Functions")
 	
 	_G.NotifyTrakala = function (Prop)
 		if Prop.Title and Prop.Text then
@@ -839,7 +846,6 @@ local script = G2L["2"];
 	end
 	
 	do -- Frame Setups
-		print("Frame Setups")
 		Startup.Size = UDim2.new(0.1, 0,0, 0)
 		Startup.Position = Startup:GetAttribute("Position1")
 		Startup.Visible = true
@@ -1011,7 +1017,6 @@ local script = G2L["2"];
 	end
 	
 	do -- Startup
-		print("Startup")
 		FrameAnimations.Startup["Go"] = function()
 			local Sizes = {
 				[1] = Startup:GetAttribute("Size1"),
@@ -1107,12 +1112,10 @@ local script = G2L["2"];
 	FrameAnimations.Startup.Go()
 	
 	do -- After Startup
-		print("After Startup")
 		MainFrame_Open()
 	end
 	
 	-- MainFrame Done
-	print("MainFrame Done")
 	
 	local TrakalaData = Instance.new("Configuration", g)
 	TrakalaData.Name = "TrakalaData"
@@ -1120,7 +1123,6 @@ local script = G2L["2"];
 	--}| 
 	
 	-- MainScript
-	print("MainScript")
 	
 	local MusicAudio = Instance.new("Sound", SoundService)
 	local MainScriptFunction = true
@@ -1278,7 +1280,6 @@ local script = G2L["2"];
 	repeat wait() until MainScriptFunction == false
 	
 	-- Request Frame Page
-	print("Request Frame Page")
 	
 	local function StartRequestFramePage ()
 		local Player = Players.LocalPlayer
@@ -1362,7 +1363,6 @@ local script = G2L["2"];
 	end
 	
 	-- Beginning
-	print("Beginning")
 	
 	local TrakalaScriptFunctions = require(ScreenGui.Scripts.LongScripts)
 	local GameListScripts = require(ScreenGui.Scripts)
