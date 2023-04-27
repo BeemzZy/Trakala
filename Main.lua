@@ -281,24 +281,15 @@ local set = {
 set["Lost Rooms"] = function()
 	task.spawn(
 		function()
-			--[=[
- d888b  db    db d888888b      .d888b.      db      db    db  .d8b.  
-88' Y8b 88    88   `88'        VP  `8D      88      88    88 d8' `8b 
-88      88    88    88            odD'      88      88    88 88ooo88 
-88  ooo 88    88    88          .88'        88      88    88 88~~~88 
-88. ~8~ 88b  d88   .88.        j88.         88booo. 88b  d88 88   88 
- Y888P  ~Y8888P' Y888888P      888888D      Y88888P ~Y8888P' YP   YP  CONVERTER
-]=]
-
-			-- Instances: 3 | Scripts: 1 | Modules: 0
+			-- Instances: 4 | Scripts: 1 | Modules: 0
 			local G2L = {};
 
-			-- StarterPlayer.StarterCharacterScripts.LostRoom
+			-- StarterGui.LostRoom
 			G2L["1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"));
 			G2L["1"]["Name"] = [[LostRoom]];
 			G2L["1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling;
 
-			-- StarterPlayer.StarterCharacterScripts.LostRoom.Time
+			-- StarterGui.LostRoom.Time
 			G2L["2"] = Instance.new("TextLabel", G2L["1"]);
 			G2L["2"]["TextWrapped"] = true;
 			G2L["2"]["TextScaled"] = true;
@@ -312,11 +303,26 @@ set["Lost Rooms"] = function()
 			G2L["2"]["BackgroundTransparency"] = 0.30000001192092896;
 			G2L["2"]["Position"] = UDim2.new(0.5, 0, 0.08344370871782303, 0);
 
-			-- StarterPlayer.StarterCharacterScripts.LostRoom.Lost Rooms
+			-- StarterGui.LostRoom.Lost Rooms
 			G2L["3"] = Instance.new("LocalScript", G2L["1"]);
 			G2L["3"]["Name"] = [[Lost Rooms]];
 
-			-- StarterPlayer.StarterCharacterScripts.LostRoom.Lost Rooms
+			-- StarterGui.LostRoom.Energy
+			G2L["4"] = Instance.new("TextLabel", G2L["1"]);
+			G2L["4"]["TextWrapped"] = true;
+			G2L["4"]["TextScaled"] = true;
+			G2L["4"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+			G2L["4"]["FontFace"] = Font.new([[rbxasset://fonts/families/Inconsolata.json]], Enum.FontWeight.ExtraLight, Enum.FontStyle.Normal);
+			G2L["4"]["TextSize"] = 14;
+			G2L["4"]["TextColor3"] = Color3.fromRGB(0, 0, 0);
+			G2L["4"]["AnchorPoint"] = Vector2.new(0.5, 0.5);
+			G2L["4"]["Size"] = UDim2.new(0.10988332331180573, 0, 0.032457176595926285, 0);
+			G2L["4"]["Text"] = [[Power: 100]];
+			G2L["4"]["Name"] = [[Energy]];
+			G2L["4"]["BackgroundTransparency"] = 0.30000001192092896;
+			G2L["4"]["Position"] = UDim2.new(0.3518630564212799, 0, 0.08344370126724243, 0);
+
+			-- StarterGui.LostRoom.Lost Rooms
 			local function C_3()
 				local script = G2L["3"];
 				if game.ReplicatedStorage:FindFirstChild("GameInfo") then
@@ -336,19 +342,12 @@ set["Lost Rooms"] = function()
 				local GameInfo = ReplicatedStorage:FindFirstChild("GameInfo")
 
 				local Time = GameInfo:FindFirstChild("Time")
+				local Energy = GameInfo:FindFirstChild("Energy")
 
 				local TimeLabel = script.Parent.Time
+				local EnergyLabel = script.Parent.Energy
 
 				function Highlight (char)
-					local Character = char
-					local Humanoid:Humanoid
-					for i,v in pairs(Character:GetChildren()) do
-						if v:IsA("Humanoid") then
-							Humanoid = v
-						end
-					end
-					local RootPart = Humanoid.RootPart
-
 					local Highlight = Instance.new("Highlight", char)
 					Highlight.Adornee = char
 					Highlight.Name = "Hightlight"
@@ -389,6 +388,10 @@ set["Lost Rooms"] = function()
 							FinalTime = tostring(T - 12).." PM"
 						end
 						TimeLabel.Text = FinalTime
+					end
+					do -- Energy
+						local E = math.floor(Energy.Value)
+						EnergyLabel.Text = "Power: "..E
 					end
 					if Update.NotCD then
 						Update.NotCD = false
@@ -797,6 +800,10 @@ local script = G2L["2"];
 	}
 	
 	local LifeQuotes
+	LifeQuotes = {
+		[[“In the depth of winter, I finally learned that within me there lay an invincible summer.” - Albert Camus]],
+		[[“you forget a thousand things every day, pal make sure this is one of 'em” - Micheal Desanta]]
+	}
 	if http_request then
 		local request_payload = {
 			Url = "https://type.fit/api/quotes",
@@ -808,9 +815,6 @@ local script = G2L["2"];
 		local decoded = HttpService:JSONDecode(json)
 		LifeQuotes = decoded
 	else
-		LifeQuotes = {
-			[[“In the depth of winter, I finally learned that within me there lay an invincible summer.” - Albert Camus]]
-		}
 	end
 	
 	-- Operation Functions
@@ -981,7 +985,7 @@ local script = G2L["2"];
 	end
 	
 	function TextAddAnimated (Text:TextLabel, Message)
-		for i = 1, #Message do RunService.RenderStepped:Wait()
+		for i = 1, #Message do task.wait(0.03)
 			local tt = string.sub(Message, 1, i)
 			local newWord = tt:sub(i, i):gsub(" ", "")
 			Text.Text = tt
@@ -999,7 +1003,7 @@ local script = G2L["2"];
 	
 	function TextRemoveAnimated (Text:TextLabel)
 		local TextLength = #Text.Text
-		for i = 1, #Text.Text do RunService.RenderStepped:Wait()
+		for i = 1, #Text.Text do task.wait()
 			local tt = string.sub(Text.Text, 1, TextLength - i)
 			Text.Text = tt
 			PlaySound(6895079853, 2, 1.5)
