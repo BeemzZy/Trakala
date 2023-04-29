@@ -35,11 +35,11 @@ G2L["4"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
 G2L["4"]["AnchorPoint"] = Vector2.new(0.5, 0.5);
 G2L["4"]["BackgroundTransparency"] = 0.20000000298023224;
 G2L["4"]["Size"] = UDim2.new(1.5, 0, 0.15000000596046448, 0);
-G2L["4"]["Position"] = UDim2.new(0.5, 0, 0.5, 0);
+G2L["4"]["Position"] = UDim2.new(0.5, 0, 0.10000000149011612, 0);
 G2L["4"]["Visible"] = false;
 G2L["4"]["Name"] = [[Startup]];
 -- Attributes
-G2L["4"]:SetAttribute([[Position1]], UDim2.new(0.5, 0, 0.5, 0));
+G2L["4"]:SetAttribute([[Position1]], UDim2.new(0.5, 0, 0.10000000149011612, 0));
 G2L["4"]:SetAttribute([[Size3]], UDim2.new(1.5, 0, 0.15000000596046448, 0));
 G2L["4"]:SetAttribute([[Size1]], UDim2.new(0.10000000149011612, 0, 0, 0));
 G2L["4"]:SetAttribute([[Size2]], UDim2.new(0.10000000149011612, 0, 0.15000000596046448, 0));
@@ -1018,94 +1018,96 @@ local script = G2L["2"];
 	
 	do -- Startup
 		FrameAnimations.Startup["Go"] = function()
-			local Sizes = {
-				[1] = Startup:GetAttribute("Size1"),
-				[2] = Startup:GetAttribute("Size2"),
-				[3] = Startup:GetAttribute("Size3")
-			}
+			spawn(function()
+				local Sizes = {
+					[1] = Startup:GetAttribute("Size1"),
+					[2] = Startup:GetAttribute("Size2"),
+					[3] = Startup:GetAttribute("Size3")
+				}
 	
-			local TweenTime = 0.8
+				local TweenTime = 0.8
 	
-			local TweenInfoIn = TweenInfo.new(TweenTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut)
-			local TweenInfoOut = TweenInfo.new(TweenTime*2, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut)
-			
-			local Top = Startup.Top
-			local Bottom = Startup.Bottom
+				local TweenInfoIn = TweenInfo.new(TweenTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut)
+				local TweenInfoOut = TweenInfo.new(TweenTime*2, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut)
 	
-			TweenService:Create(Startup, TweenInfoIn, {
-				Size = Sizes[2]
-			}):Play()
-			
-			TweenService:Create(BlurEffect, TweenInfoIn, {
-				Size = 24
-			}):Play()
-			
-			task.delay(TweenInfoIn.Time/2, function()
-				TweenService:Create(Top, TweenInfoIn, {
-					Size = Top:GetAttribute("Size2")
+				local Top = Startup.Top
+				local Bottom = Startup.Bottom
+	
+				TweenService:Create(Startup, TweenInfoIn, {
+					Size = Sizes[2]
 				}):Play()
 	
-				TweenService:Create(Bottom, TweenInfoIn, {
-					Size = Bottom:GetAttribute("Size2")
+				TweenService:Create(BlurEffect, TweenInfoIn, {
+					Size = 24
 				}):Play()
-			end)
-			
-			wait(TweenInfoIn.Time)
 	
-			TweenService:Create(Startup, TweenInfoOut, {
-				Size = Sizes[3]
-			}):Play()
-			
-			wait(TweenInfoOut.Time)
-			TweenInfoIn = TweenInfo.new(TweenInfoIn.Time*1.5, TweenInfoIn.EasingStyle, TweenInfoIn.EasingDirection)
-			
-			TweenService:Create(Description, TweenInfoIn, {
-				TextColor3 = Description:GetAttribute("TextColor2")
-			}):Play()
+				task.delay(TweenInfoIn.Time/2, function()
+					TweenService:Create(Top, TweenInfoIn, {
+						Size = Top:GetAttribute("Size2")
+					}):Play()
 	
-			wait(TweenInfoIn.Time*2)
-			
-			local quote = GetQuotes()
-			if quote["text"] then
-				local textQuotes = "“"..quote["text"]
-				
-				if quote["author"] then
-					textQuotes = textQuotes.."” - "..quote["author"]
-				else
-					textQuotes = textQuotes.."” - ".."Unknow"
+					TweenService:Create(Bottom, TweenInfoIn, {
+						Size = Bottom:GetAttribute("Size2")
+					}):Play()
+				end)
+	
+				wait(TweenInfoIn.Time)
+	
+				TweenService:Create(Startup, TweenInfoOut, {
+					Size = Sizes[3]
+				}):Play()
+	
+				wait(TweenInfoOut.Time)
+				TweenInfoIn = TweenInfo.new(TweenInfoIn.Time*1.5, TweenInfoIn.EasingStyle, TweenInfoIn.EasingDirection)
+	
+				TweenService:Create(Description, TweenInfoIn, {
+					TextColor3 = Description:GetAttribute("TextColor2")
+				}):Play()
+	
+				wait(TweenInfoIn.Time*2)
+	
+				local quote = GetQuotes()
+				if quote["text"] then
+					local textQuotes = "“"..quote["text"]
+	
+					if quote["author"] then
+						textQuotes = textQuotes.."” - "..quote["author"]
+					else
+						textQuotes = textQuotes.."” - ".."Unknow"
+					end
+					TextAddAnimated(Description, textQuotes)
 				end
-				TextAddAnimated(Description, textQuotes)
-			end
-			
-			wait(TweenInfoIn.Time*2)
-			
-			TextRemoveAnimated(Description)
-			
-			wait(TweenInfoIn.Time)
-			TweenInfoIn = TweenInfo.new(TweenTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut)
-			TweenInfoOut = TweenInfo.new(TweenTime*2, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut)
-			
-			TweenService:Create(Startup, TweenInfoIn, {
-				Size = Sizes[2]
-			}):Play()
-			
-			task.delay(TweenInfoIn.Time/1.5, function()
-				TweenService:Create(Top, TweenInfoIn, {
-					Size = Top:GetAttribute("Size1")
+	
+				wait(TweenInfoIn.Time*2)
+	
+				TextRemoveAnimated(Description)
+	
+				wait(TweenInfoIn.Time)
+				TweenInfoIn = TweenInfo.new(TweenTime, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut)
+				TweenInfoOut = TweenInfo.new(TweenTime*2, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut)
+	
+				TweenService:Create(Startup, TweenInfoIn, {
+					Size = Sizes[2]
 				}):Play()
 	
-				TweenService:Create(Bottom, TweenInfoIn, {
-					Size = Bottom:GetAttribute("Size1")
+				task.delay(TweenInfoIn.Time/1.5, function()
+					TweenService:Create(Top, TweenInfoIn, {
+						Size = Top:GetAttribute("Size1")
+					}):Play()
+	
+					TweenService:Create(Bottom, TweenInfoIn, {
+						Size = Bottom:GetAttribute("Size1")
+					}):Play()
+				end)
+	
+				wait(TweenInfoIn.Time)
+	
+				TweenService:Create(Startup, TweenInfoOut, {
+					Size = Sizes[1]
 				}):Play()
+	
+				wait(TweenInfoOut.Time)
 			end)
-	
-			wait(TweenInfoIn.Time)
-	
-			TweenService:Create(Startup, TweenInfoOut, {
-				Size = Sizes[1]
-			}):Play()
-			
-			wait(TweenInfoOut.Time)
 		end
 	end
 	
