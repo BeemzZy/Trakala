@@ -285,7 +285,7 @@ set["Lost Rooms"] = function()
 			local G2L = {};
 
 			-- StarterGui.LostRoom
-			G2L["1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"));
+			G2L["1"] = Instance.new("ScreenGui", game.CoreGui);
 			G2L["1"]["Name"] = [[LostRoom]];
 			G2L["1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling;
 
