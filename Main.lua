@@ -281,11 +281,11 @@ local set = {
 set["Lost Rooms"] = function()
 	task.spawn(
 		function()
-			-- Instances: 4 | Scripts: 1 | Modules: 0
+			-- Instances: 6 | Scripts: 1 | Modules: 0
 			local G2L = {};
 
 			-- StarterGui.LostRoom
-			G2L["1"] = Instance.new("ScreenGui", game.CoreGui);
+			G2L["1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"));
 			G2L["1"]["Name"] = [[LostRoom]];
 			G2L["1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling;
 
@@ -303,28 +303,36 @@ set["Lost Rooms"] = function()
 			G2L["2"]["BackgroundTransparency"] = 0.30000001192092896;
 			G2L["2"]["Position"] = UDim2.new(0.5, 0, 0.08344370871782303, 0);
 
+			-- StarterGui.LostRoom.Time.UICorner
+			G2L["3"] = Instance.new("UICorner", G2L["2"]);
+
+
 			-- StarterGui.LostRoom.Lost Rooms
-			G2L["3"] = Instance.new("LocalScript", G2L["1"]);
-			G2L["3"]["Name"] = [[Lost Rooms]];
+			G2L["4"] = Instance.new("LocalScript", G2L["1"]);
+			G2L["4"]["Name"] = [[Lost Rooms]];
 
 			-- StarterGui.LostRoom.Energy
-			G2L["4"] = Instance.new("TextLabel", G2L["1"]);
-			G2L["4"]["TextWrapped"] = true;
-			G2L["4"]["TextScaled"] = true;
-			G2L["4"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-			G2L["4"]["FontFace"] = Font.new([[rbxasset://fonts/families/Inconsolata.json]], Enum.FontWeight.ExtraLight, Enum.FontStyle.Normal);
-			G2L["4"]["TextSize"] = 14;
-			G2L["4"]["TextColor3"] = Color3.fromRGB(0, 0, 0);
-			G2L["4"]["AnchorPoint"] = Vector2.new(0.5, 0.5);
-			G2L["4"]["Size"] = UDim2.new(0.10988332331180573, 0, 0.032457176595926285, 0);
-			G2L["4"]["Text"] = [[Power: 100]];
-			G2L["4"]["Name"] = [[Energy]];
-			G2L["4"]["BackgroundTransparency"] = 0.30000001192092896;
-			G2L["4"]["Position"] = UDim2.new(0.3518630564212799, 0, 0.08344370126724243, 0);
+			G2L["5"] = Instance.new("TextLabel", G2L["1"]);
+			G2L["5"]["TextWrapped"] = true;
+			G2L["5"]["TextScaled"] = true;
+			G2L["5"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+			G2L["5"]["FontFace"] = Font.new([[rbxasset://fonts/families/Inconsolata.json]], Enum.FontWeight.ExtraLight, Enum.FontStyle.Normal);
+			G2L["5"]["TextSize"] = 14;
+			G2L["5"]["TextColor3"] = Color3.fromRGB(0, 0, 0);
+			G2L["5"]["AnchorPoint"] = Vector2.new(0.5, 0.5);
+			G2L["5"]["Size"] = UDim2.new(0.10988332331180573, 0, 0.032457176595926285, 0);
+			G2L["5"]["Text"] = [[Power: 100]];
+			G2L["5"]["Name"] = [[Energy]];
+			G2L["5"]["BackgroundTransparency"] = 0.30000001192092896;
+			G2L["5"]["Position"] = UDim2.new(0.3518630564212799, 0, 0.08344370126724243, 0);
+
+			-- StarterGui.LostRoom.Energy.UICorner
+			G2L["6"] = Instance.new("UICorner", G2L["5"]);
+
 
 			-- StarterGui.LostRoom.Lost Rooms
-			local function C_3()
-				local script = G2L["3"];
+			local function C_4()
+				local script = G2L["4"];
 				if game.ReplicatedStorage:FindFirstChild("GameInfo") then
 				else
 					return
@@ -386,6 +394,8 @@ set["Lost Rooms"] = function()
 						local FinalTime = T.." AM"
 						if Time.Value > 13 then
 							FinalTime = tostring(T - 12).." PM"
+						elseif Time.Value == 0 then
+							FinalTime = tostring(12).." PM"
 						end
 						TimeLabel.Text = FinalTime
 					end
@@ -405,7 +415,7 @@ set["Lost Rooms"] = function()
 				RunService.Heartbeat:Connect(Heartbeat)
 
 			end;
-			task.spawn(C_3);
+			task.spawn(C_4);
 
 			return G2L["1"], require;
 		end
